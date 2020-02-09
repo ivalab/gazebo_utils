@@ -1,0 +1,19 @@
+#!/usr/bin/env python
+import rospy
+from gazebo_utils.gazebo_world_to_map import MapCreator
+
+if __name__ == '__main__':
+    rospy.init_node("gazebo_map_publisher")
+    world_file = rospy.get_param('~world_file', None)
+    grey_walls = rospy.get_param('~grey_walls', True)
+    update_freq = rospy.get_param('~update_freq', 1.0)
+
+    
+    if world_file is None and grey_walls == False:
+        rospy.logerr("gazebo_map_publisher has no sources to use to publish a map!")
+    else:
+        map = MapCreator()
+        map.runMapPublisher(grey_walls = grey_walls, world_file=world_file, update_freq=update_freq)
+
+        rospy.spin()
+
