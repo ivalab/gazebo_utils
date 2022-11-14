@@ -174,15 +174,15 @@ class MapCreator():
 
         def publishCorrection(timerevent=None):
             pass
-            print "Timer callback: " + str(count[0]) + " not moving, " + str(count[1]) + " moving"
+            print("Timer callback: " + str(count[0]) + " not moving, " + str(count[1]) + " moving")
             if robot_state[0] is not None:
                 if count[0] > 20 * count[1] and robot_state[1] is not None: #If hasn't moved since last check...
-                    print "Setting state"
+                    print("Setting state")
                     stationary_state = ModelState(model_name=robot_state[1].model_name, pose=robot_state[1].pose)
                     setState(stationary_state)
                 else:
                     robot_state[1] = robot_state[0]
-                    print "updating saved state"
+                    print("updating saved state")
             count[0] = 0
             count[1] = 0
 
@@ -372,14 +372,14 @@ class MapCreator():
 
     def getWallPoses(self, model_states):
         try:
-            wall_poses = [model_states.pose[n] for n in xrange(len(model_states.name)) if "grey_wall" in model_states.name[n]]
+            wall_poses = [model_states.pose[n] for n in range(len(model_states.name)) if "grey_wall" in model_states.name[n]]
         except AttributeError:
             wall_poses = []
         return wall_poses
 
     def getRobotPose(self, model_states):
         try:
-            robot_poses = [model_states.pose[n] for n in xrange(len(model_states.name)) if "mobile_base" in model_states.name[n]]
+            robot_poses = [model_states.pose[n] for n in range(len(model_states.name)) if "mobile_base" in model_states.name[n]]
             if len(robot_poses)==1:
                 return robot_poses[0]
         except AttributeError:
@@ -388,7 +388,7 @@ class MapCreator():
 
     def getModelState(self, model_states, model_name):
         try:
-            model_num = [n for n in xrange(len(model_states.name)) if model_name in model_states.name[n]]
+            model_num = [n for n in range(len(model_states.name)) if model_name in model_states.name[n]]
             if len(model_num)==1:
                 model_num = model_num[0]
                 model_state = ModelState(model_name=model_states.name[model_num], pose=model_states.pose[model_num], twist=model_states.twist[model_num])
