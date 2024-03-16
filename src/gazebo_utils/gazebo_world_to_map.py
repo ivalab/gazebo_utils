@@ -49,6 +49,7 @@ class MapCreator():
 
         #self.tf_broadcaster_r = tf2_ros.TransformBroadcaster()
         self.tf_broadcaster_m = None
+        self.last_tf_time = None
 
 
         self.tfBuffer = tf2_ros.Buffer()
@@ -259,7 +260,6 @@ class MapCreator():
             self.tf_broadcaster_m.sendTransform(Tm_o)
             self.transform = Tm_o
 
-
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
             rospy.logerr_throttle(1,"can't find odom to base")
 
@@ -274,7 +274,12 @@ class MapCreator():
             rospy.logdebug("Publishing map-odom transform")
             trans = self.transform
             trans.header.stamp = rospy.Time.now() + rospy.Duration(.1)
-            self.tf_broadcaster_m.sendTransform(trans)
+
+            if self.last_tf_time is not None:
+                rospy.logwarn(str(self.last_tf_time.to_sec()) + " " + str(trans.header.stamp.to_sec()))
+            if self.last_tf_time is None or (self.last_tf_time is not None and self.last_tf_time != trans.header.stamp):
+                self.tf_broadcaster_m.sendTransform(trans)
+                self.last_tf_time = trans.header.stamp
 
 
     def getXMLWalls(self,world_file):
